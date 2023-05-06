@@ -51,9 +51,9 @@ void ku_proc_init(int nprocs, char *flist){
 	processLength = nprocs;
 	FILE* fl = fopen(flist, "r");
 	pcbs = malloc(sizeof * pcbs * nprocs);
-	char* processFileName = NULL;
 	size_t len = 0;
 	for (int i = 0; i < nprocs; i++) {
+		char* processFileName = NULL;
 		getline(&processFileName, &len, fl);
 		if (i == nprocs - 1) processFileName = appendNewLine(processFileName);
 
@@ -70,7 +70,6 @@ void ku_proc_init(int nprocs, char *flist){
 		char* newstr = malloc(strlen(str) + 2);
 		strcpy(newstr, str);
 		strcat(newstr, "\n");
-
 		return newstr;
 	}
 
