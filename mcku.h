@@ -10,7 +10,7 @@ struct pcb{
 };
 
 //PCB Struct Arrays
-struct* pcb pcbs;
+struct pcb* pcbs;
 
 // Num of Processes
 int processLength;
@@ -37,8 +37,6 @@ void ku_pgfault_handler(char pid){
 	// 하지만 실제 어드레스를 다루는 것은 아니고 
 	// 어드레스를 흉내내는 값을 다루고 있는 것이다.
 	/* Your code here */
-	if ()
-	
 }
 
 
