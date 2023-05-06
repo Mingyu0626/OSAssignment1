@@ -94,6 +94,9 @@ void ku_run_cpu(void){
 }
 
 int main(int argc, char *argv[]){
+	// argv[0] ?
+	// argv[1]는 argc
+	// argv[2]는 txt파일명 (proc.txt)
 	/* System initialization */
 	ku_os_init();
 

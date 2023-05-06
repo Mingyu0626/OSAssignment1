@@ -6,3 +6,7 @@
 *.ipch
 *.json
 *.sqlite
+*.db-wal
+*.vsidx
+*.db-shm
+*.opendb
