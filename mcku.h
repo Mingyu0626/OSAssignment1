@@ -7,7 +7,7 @@ struct pcb{
 
 
 void ku_scheduler(char pid){
-
+	// hungry
 	/* Your code here */
 
 }
