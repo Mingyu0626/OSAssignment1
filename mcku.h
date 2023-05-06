@@ -55,7 +55,8 @@ void ku_proc_init(int nprocs, char *flist){
 	for (int i = 0; i < nprocs; i++) {
 		char* processFileName = NULL;
 		getline(&processFileName, &len, fl);
-		if (i == nprocs - 1) processFileName = appendNewLine(processFileName);
+		if (i == nprocs - 1) 
+			processFileName = appendNewLine(processFileName);
 
 
 		pcbs[i].fd = fopen(processFileName, "r");
