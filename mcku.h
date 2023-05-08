@@ -24,7 +24,7 @@ void ku_scheduler(char pid) {
     } while (current->isExit && count++ < processLength);
 
     if (count >= processLength) {
-        // printf("모든 프로세스 종료");
+        printf("all process was exited\n");
         exit(0);
     }
 }
@@ -37,6 +37,7 @@ void ku_pgfault_handler(char pid) {
 
 void ku_proc_exit(char pid) {
     pcbs[pid].isExit = true;
+    printf("proc_exit is called\n");
 }
 
 
