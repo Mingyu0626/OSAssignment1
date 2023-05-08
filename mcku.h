@@ -32,13 +32,15 @@ void ku_scheduler(char pid) {
 
 void ku_pgfault_handler(char pid) {
     int pt_index = (pid & 0xF0) >> 4;
-    ptbr[pt_index] = 1;
+    current->pgtable[pt_index] = 1;
+    //ptbr[pt_index] = 1;
 }
 
 
 void ku_proc_exit(char pid) {
+    printf("proc_exit is called\n");
     pcbs[pid].isExit = true;
-    // printf("proc_exit is called\n");
+    free(&pcbs[pid]);
 }
 
 

@@ -75,7 +75,7 @@ void ku_run_cpu(void){
 			if(pa >= 0){
 				sorf = 'S';
 			}
-			else{
+			else {
 				/* Generates a page fault */
 				kuos.pgfault(va);
 				pa = ku_traverse(va);
