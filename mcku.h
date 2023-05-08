@@ -19,6 +19,8 @@ struct pcb* pcbs;
 // Num of Processes
 int processLength;
 
+char* deleteNewLine(char* str);
+
 // pid를 1씩 올려서 current에 넣어주는 스케줄링
 void ku_scheduler(char pid) {
 	int count = 0;
