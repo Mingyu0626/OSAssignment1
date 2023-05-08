@@ -37,7 +37,7 @@ int ku_traverse(char va){
 
 	pt_index = (va & 0xF0) >> 4;
 	// va & 0xF0 : va의 하위 4비트를 0으로 만들기
-	// >> 4 : va의 상위 4비트 값을 오른쪽으로 이동
+	// >> 4 : va의 비트열을 4칸씩 오른쪽으로 이등
 	pte = ptbr + pt_index; 
 
 	// if va가 225일때, (11100001일 때)
@@ -47,6 +47,8 @@ int ku_traverse(char va){
 
 	if(!*pte)
 		return -1;
+	// Fail이 뜨는건 여기서 걸리기 때문이다.
+
 	pa = ((*pte & 0xFC) << 2) + (va & 0x0F);
 	// (*pte & 0xFC) : pte의 하위 2비트를 0으로 만들기
 	//  << 2 : 왼쪽으로 2비트씩 시프트, 결과적으로 pte의 값을 2비트 왼쪽으로 이동
@@ -80,7 +82,7 @@ void ku_run_cpu(void){
 				kuos.exit(current->pid);
 				break;
 			}
-			va = addr & 0xFF;
+			va = addr & 0xFF; // addr의 8비트를 모두 취해서 va에 넣어준다
 			pa = ku_traverse(va);
 
 			if(pa >= 0){
@@ -100,7 +102,6 @@ void ku_run_cpu(void){
 			}
 
 			printf("%d: %d -> %d (%c)\n", current->pid, va, pa, sorf);
-			// pa값이 offset으로 출력이 되는듯
 		}
 
 		kuos.sched(current->pid);
