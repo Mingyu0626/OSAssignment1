@@ -70,8 +70,7 @@ void ku_proc_init(int nprocs, char *flist){
 		pcbs[i].fd = fopen(processFileName, "r");
 		pcbs[i].pid = i;
 		pcbs[i].pgtable = malloc(sizeof * pcbs->pgtable * 16);
-		pcbs[i].pgtable = 0x00;
-		// 공간 할당만 해두고 값은 초기화 안해줘도 되나..?
+		// pcbs[i].pgtable = 0x00;
 		pcbs[i].isExit = false;
 		free(processFileName);
 	}
