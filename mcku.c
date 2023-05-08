@@ -36,13 +36,24 @@ int ku_traverse(char va){
 	char *pte;
 
 	pt_index = (va & 0xF0) >> 4;
-	pte = ptbr + pt_index;
+	// va & 0xF0 : va의 하위 4비트를 0으로 만들기
+	// >> 4 : va의 상위 4비트 값을 오른쪽으로 이동
+	pte = ptbr + pt_index; 
+
+	// if va가 225일때, (11100001일 때)
+	// 00000000 + 00001110 = 00001110이 pte가 된다. 
 
 	// printf("pt_index: %d, pte: %s", pt_index, pte);
 
 	if(!*pte)
 		return -1;
 	pa = ((*pte & 0xFC) << 2) + (va & 0x0F);
+	// (*pte & 0xFC) : pte의 하위 2비트를 0으로 만들기
+	//  << 2 : 왼쪽으로 2비트씩 시프트, 결과적으로 pte의 값을 2비트 왼쪽으로 이동
+	// (va & 0x0F) : va의 하위 4비트 값 더하기
+
+	// 00001100 -> 00110000 -> 001100001
+	// 결과적으로 va 225는 pa 49로 변환
 
 	return pa;
 }
@@ -89,6 +100,7 @@ void ku_run_cpu(void){
 			}
 
 			printf("%d: %d -> %d (%c)\n", current->pid, va, pa, sorf);
+			// pa값이 offset으로 출력이 되는듯
 		}
 
 		kuos.sched(current->pid);

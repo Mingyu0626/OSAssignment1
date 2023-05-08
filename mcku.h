@@ -17,6 +17,8 @@ extern char* ptbr;
 
 char* deleteNewLine(char* str);
 
+int freelist[64]; // 0 is empty, 1 is filled
+
 void ku_scheduler(char pid) {
     int count = 0;
     do {
@@ -32,8 +34,7 @@ void ku_scheduler(char pid) {
 
 void ku_pgfault_handler(char pid) {
     int pt_index = (pid & 0xF0) >> 4;
-    current->pgtable[pt_index] = 1;
-    ptbr[pt_index] = 1;
+    ptbr[pt_index] = (pid & 0x0F) + 2;
 }
 
 
@@ -49,6 +50,10 @@ void ku_proc_init(int nprocs, char* flist) {
     FILE* fileList = fopen(flist, "r");
     pcbs = malloc(sizeof * pcbs * nprocs);
     size_t len = 0;
+
+    for (int i = 0; i < 64; i++) {
+        freelist[i] = 0;
+    }
 
     for (int i = 0; i < nprocs; i++) {
         char* processFileName = NULL;
