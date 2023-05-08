@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdio.h>
 #include <stdbool.h>
 
 struct pcb {
@@ -24,7 +25,7 @@ void ku_scheduler(char pid) {
     } while (current->isExit && count++ < processLength);
 
     if (count >= processLength) {
-        printf("all process was exited\n");
+        // printf("all process was exited\n");
         exit(0);
     }
 }
@@ -37,7 +38,7 @@ void ku_pgfault_handler(char pid) {
 
 void ku_proc_exit(char pid) {
     pcbs[pid].isExit = true;
-    printf("proc_exit is called\n");
+    // printf("proc_exit is called\n");
 }
 
 
