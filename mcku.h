@@ -64,7 +64,6 @@ void ku_proc_init(int nprocs, char* flist) {
         pcbs[i].fd = fopen(processFileName, "r");
         pcbs[i].pid = i;
         pcbs[i].pgtable = malloc(sizeof * pcbs->pgtable * 16);
-        pcbs[i].pgtable = 0;
         printf("%d\n", pcbs[i].pgtable);
         pcbs[i].isExit = false;
 
