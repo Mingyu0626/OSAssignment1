@@ -35,7 +35,7 @@ void ku_scheduler(char pid) {
 void ku_pgfault_handler(char pid) {
     unsigned char va = pid;
     int pt_index = (va & 0xF0) >> 4;
-    ptbr[pt_index] = (va & 0x0F) + 1;
+    ptbr[pt_index] = ((va & 0x0F) << 2) + 2;
 }
 
 
