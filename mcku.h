@@ -27,7 +27,7 @@ void ku_scheduler(char pid) {
     } while (current->isExit && count++ < processLength);
 
     if (count >= processLength) {
-        // printf("all process was exited\n");
+        printf("all process was exited\n");
         exit(0);
     }
 }
