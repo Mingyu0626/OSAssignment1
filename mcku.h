@@ -31,9 +31,9 @@ void ku_scheduler(char pid) {
 }
 
 void ku_pgfault_handler(char pid) {
-    // int pt_index = (pid & 0xF0) >> 4;
-    // current->pgtable[pt_index] = 1;
-    // ptbr[pt_index] = 1;
+    int pt_index = (pid & 0xF0) >> 4;
+    current->pgtable[pt_index] = 1;
+    ptbr[pt_index] = 1;
 }
 
 
