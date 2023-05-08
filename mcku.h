@@ -1,8 +1,6 @@
 #include <string.h>
 #include <stdbool.h>
 
-char* deleteNewLine(char* str);
-
 struct pcb {
     unsigned char pid;
     FILE* fd;
@@ -12,12 +10,14 @@ struct pcb {
 
 struct pcb* pcbs;
 int processLength;
+
 extern struct pcb* current;
 extern char* ptbr;
 
+char* deleteNewLine(char* str);
+
 void ku_scheduler(char pid) {
     int count = 0;
-
     do {
         current = &pcbs[++pid % processLength];
         ptbr = current->pgtable;
@@ -28,8 +28,8 @@ void ku_scheduler(char pid) {
     }
 }
 
-void ku_pgfault_handler(char va) {
-    int pt_index = (va & 0xF0) >> 4;
+void ku_pgfault_handler(char pid) {
+    int pt_index = (pid & 0xF0) >> 4;
     ptbr[pt_index] = 1;
 }
 
