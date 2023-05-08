@@ -24,6 +24,7 @@ void ku_scheduler(char pid) {
     } while (current->isExit && count++ < processLength);
 
     if (count >= processLength) {
+        printf("모든 프로세스 종료");
         exit(0);
     }
 }

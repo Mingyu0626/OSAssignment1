@@ -38,6 +38,8 @@ int ku_traverse(char va){
 	pt_index = (va & 0xF0) >> 4;
 	pte = ptbr + pt_index;
 
+	printf("pt_index: %d, pte: %s", pt_index, pte);
+
 	if(!*pte)
 		return -1;
 	pa = ((*pte & 0xFC) << 2) + (va & 0x0F);
