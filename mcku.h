@@ -34,7 +34,7 @@ void ku_scheduler(char pid) {
 
 void ku_pgfault_handler(char va) {
     int pt_index = (va & 0xF0) >> 4; // va의 하위 4비트 0으로 만들고 오른쪽으로 4칸 옮기기
-    ptbr = (va & 0x0F) + 1; // va의 상위 4비트 0으로 만들기
+    ptbr[pt_index] = (va & 0x0F) + 1; // va의 상위 4비트 0으로 만들기
 }
 
 
