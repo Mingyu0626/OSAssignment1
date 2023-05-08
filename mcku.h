@@ -28,7 +28,7 @@ void ku_scheduler(char pid) {
 	} while (current->isExit && count++ < processLength);
 
 	if (count == processLength) {
-		current = NULL;
+		exit(0);
 	}
 }
 
@@ -56,6 +56,8 @@ void ku_proc_init(int nprocs, char *flist){
 	FILE* fl = fopen(flist, "r");
 	pcbs = malloc(sizeof * pcbs * nprocs);
 	size_t len = 0;
+
+
 	for (int i = 0; i < nprocs; i++) {
 		char* processFileName = NULL;
 		getline(&processFileName, &len, fl);
@@ -71,6 +73,9 @@ void ku_proc_init(int nprocs, char *flist){
 		pcbs[i].isExit = false;
 		free(processFileName);
 	}
+	current = &pcbs[0];
+	ptbr = current->pgtable;
+
 }
 
 char* deleteNewLine(char* str) {
