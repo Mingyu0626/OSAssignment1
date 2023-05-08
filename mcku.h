@@ -34,7 +34,7 @@ void ku_scheduler(char pid) {
 
 void ku_pgfault_handler(char va) {
     int pt_index = (va & 0xF0) >> 4; // va의 하위 4비트 0으로 만들기
-    ptbr[pt_index] = (va & 0x0F) + 1; // va의 상위 4비트 0으로 만들기
+    ptbr[pt_index] = (va & 0x0F); // va의 상위 4비트 0으로 만들기
 }
 
 
@@ -64,7 +64,6 @@ void ku_proc_init(int nprocs, char* flist) {
         pcbs[i].fd = fopen(processFileName, "r");
         pcbs[i].pid = i;
         pcbs[i].pgtable = malloc(sizeof * pcbs->pgtable * 16);
-        printf("%d\n", pcbs[i].pgtable);
         pcbs[i].isExit = false;
 
         free(processFileName);
