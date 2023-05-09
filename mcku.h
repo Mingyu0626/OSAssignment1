@@ -10,7 +10,7 @@ struct pcb {
 };
 
 struct pcb* pcbs;
-int processLength;
+int numOfProcess = 0;
 
 extern struct pcb* current;
 extern char* ptbr;
@@ -22,63 +22,83 @@ int freelist[64]; // 0 is empty, 1 is filled
 void ku_scheduler(char pid) {
     int count = 0;
     do {
-        current = &pcbs[++pid % processLength];
+        current = &pcbs[++pid % numOfProcess];
         ptbr = current->pgtable;
-    } while (current->isExit && count++ < processLength);
+    } while (current->isExit && count++ < numOfProcess);
 
-    if (count >= processLength) {
+    if (count >= numOfProcess) {
         printf("all process was exited\n");
-        exit(0);
+        current = NULL;
     }
 }
 
 void ku_pgfault_handler(char va) {
-    int pt_index = (va & 0xF0) >> 4; // va의 하위 4비트 0으로 만들고 오른쪽으로 4칸 옮기기
-    ptbr[pt_index] = (va & 0x0F) + 1; // va의 상위 4비트 0으로 만들기
+    unsigned char vpn = (va & 0xF0) >> 4; // va의 하위 4비트 0으로 만들고 오른쪽으로 4칸 옮기기
+    int pfn = 0;
+    for (int i = 0; i < 64; i++) {
+        if (freelist[i] == -1) {
+            freelist[i] = vpn;
+            pfn = i;
+            // printf("pfn set %d -> %d\n", vpn, pfn);
+            current->pgtable[vpn] = (pfn << 2) + 0x01;
+            return;
+        }
+    }
+    current->pgtable[vpn] = 0;
+    return;
 }
 
 
 void ku_proc_exit(char pid) {
-    printf("proc_exit is called\n");
     pcbs[pid].isExit = true;
+
+    for (int i = 0; i < 16; i++) {
+        if (pcbs[pid].pgtable[i] != 0) {
+            // pte가 0이 아님, 즉 페이지를 사용했음
+            int usedpfn = ((pcbs[pid].pgtable[i] & 0xFC) >> 2);
+            freelist[usedpfn] = -1;
+            // printf("사용했던 PFN : %d\n", usedpfn);
+        }
+    }
     free(pcbs[pid].pgtable);
     fclose(pcbs[pid].fd);
+    printf("proc_exit 호출 : %d번 프로세스 종료\n", pid);
 }
 
 
 void ku_proc_init(int nprocs, char* flist) {
-    processLength = nprocs;
+    numOfProcess = nprocs;
     FILE* fileList = fopen(flist, "r");
     pcbs = malloc(sizeof * pcbs * nprocs);
     size_t len = 0;
 
     for (int i = 0; i < 64; i++) {
-        freelist[i] = 0;
+        freelist[i] = -1;
     }
 
+    char filename[20];
     for (int i = 0; i < nprocs; i++) {
-        char* processFileName = NULL;
-        getline(&processFileName, &len, fileList);
-        processFileName = deleteNewLine(processFileName);
-
-        pcbs[i].fd = fopen(processFileName, "r");
+        fscanf(fileList, "%s", filename);
+        pcbs[i].fd = fopen(filename, "r");
         pcbs[i].pid = i;
         pcbs[i].pgtable = malloc(sizeof * pcbs->pgtable * 16);
+        for (int j = 0; j < 16; j++) {
+            pcbs[i].pgtable[j] = 0;
+        }
         pcbs[i].isExit = false;
-
-        free(processFileName);
     }
+    fclose(fileList);
     current = &pcbs[0];
     ptbr = current->pgtable;
 }
 
 char* deleteNewLine(char* str) {
-    if (str[strlen(str) - 1] != '\n') 
+    if (str[strlen(str) - 1] != '\n')
         return str;
 
     char* newStr = (char*)malloc(strlen(str) - 1);
 
-    for (int i = 0; i < strlen(str) - 1; i++) 
+    for (int i = 0; i < strlen(str) - 1; i++)
         newStr[i] = str[i];
 
     return newStr;
