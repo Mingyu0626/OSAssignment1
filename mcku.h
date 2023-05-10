@@ -12,12 +12,11 @@ struct pcb {
 struct pcb* pcbs;
 int numOfProcess = 0;
 
+//from mcku.c
 extern struct pcb* current;
 extern char* ptbr;
 
-char* deleteNewLine(char* str);
-
-int freelist[64]; // 0 is empty, 1 is filled
+int freelist[64]; // -1 is empty, vpn is filled
 
 void ku_scheduler(char pid) {
     int count = 0;
@@ -33,13 +32,12 @@ void ku_scheduler(char pid) {
 }
 
 void ku_pgfault_handler(char va) {
-    unsigned char vpn = (va & 0xF0) >> 4; // va의 하위 4비트 0으로 만들고 오른쪽으로 4칸 옮기기
+    unsigned char vpn = (va & 0xF0) >> 4;
     int pfn = 0;
     for (int i = 0; i < 64; i++) {
         if (freelist[i] == -1) {
             freelist[i] = vpn;
             pfn = i;
-            // printf("pfn set %d -> %d\n", vpn, pfn);
             current->pgtable[vpn] = (pfn << 2) + 0x01;
             return;
         }
@@ -70,7 +68,6 @@ void ku_proc_init(int nprocs, char* flist) {
     numOfProcess = nprocs;
     FILE* fileList = fopen(flist, "r");
     pcbs = malloc(sizeof * pcbs * nprocs);
-    size_t len = 0;
 
     for (int i = 0; i < 64; i++) {
         freelist[i] = -1;
@@ -90,16 +87,4 @@ void ku_proc_init(int nprocs, char* flist) {
     fclose(fileList);
     current = &pcbs[0];
     ptbr = current->pgtable;
-}
-
-char* deleteNewLine(char* str) {
-    if (str[strlen(str) - 1] != '\n')
-        return str;
-
-    char* newStr = (char*)malloc(strlen(str) - 1);
-
-    for (int i = 0; i < strlen(str) - 1; i++)
-        newStr[i] = str[i];
-
-    return newStr;
 }
