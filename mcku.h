@@ -60,7 +60,7 @@ void ku_proc_exit(char pid) {
     }
     free(pcbs[pid].pgtable);
     fclose(pcbs[pid].fd);
-    printf("proc_exit called : process %d is exited \n", pid);
+    // printf("proc_exit called : process %d is exited \n", pid);
 }
 
 
